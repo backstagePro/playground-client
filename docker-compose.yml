@@ -16,14 +16,23 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/usr/src/app
+
+  playground-api:
+    build:
+      context: ../playground-api/
+      dockerfile: ./Dockerfile
     environment:
       - MONGO_USERNAME=$MONGO_USERNAME
       - MONGO_PASSWORD=$MONGO_PASSWORD
       - DB_URL=playground_db
     ports:
-      - 3000:3000
+      - 3001:3001
     volumes:
-      - ./:/usr/src/app
+      - ../playground-api/:/usr/src/app
 
 volumes:
   dbdata:
