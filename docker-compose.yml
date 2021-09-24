@@ -1,0 +1,36 @@
+version: '3'
+services:
+  playground_db:
+    image: mongo:4.1.8-xenial
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$MONGO_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
+    volumes:
+      - dbdata:/data/db
+    ports:
+      - 7201:27017
+
+  playground-client:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      - MONGO_USERNAME=$MONGO_USERNAME
+      - MONGO_PASSWORD=$MONGO_PASSWORD
+      - DB_URL=playground_db
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/usr/src/app
+
+volumes:
+  dbdata:
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.2.0/24
