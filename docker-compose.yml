@@ -31,8 +31,10 @@ services:
       - DB_URL=playground_db
     ports:
       - 3001:3001
+      - 9229:9229
     volumes:
       - ../playground-api/:/usr/src/app
+      - ../playground-example-project/:/usr/src/playground-example-project
 
 volumes:
   dbdata:
