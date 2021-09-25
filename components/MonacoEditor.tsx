@@ -1,4 +1,8 @@
 import { useEffect, useRef } from "react";
+
+/**
+ * In future make the loader to laod the monaco from 'node_modules' folder.
+ */
 import loader from '@monaco-editor/loader';
 import { editor } from "monaco-editor";
 
