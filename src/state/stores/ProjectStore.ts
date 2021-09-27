@@ -48,8 +48,9 @@ export default class ProjectStore {
     makeObservable(this, {
       projectList: observable,
       currentOpenProject: observable,
+      getProjectNameFromPath: computed,
       loadProjects: action,
-      getProjectNameFromPath: computed
+      deleteProject: action,
     })
   }
 
@@ -80,5 +81,14 @@ export default class ProjectStore {
     let apiClient = await ServiceLocator.get<SERVICE_API_CLIENT>(SERVICE_API_CLIENT);
 
     this.currentOpenProject = await apiClient.fetchProject(id); 
+  }
+
+  public async deleteProject(id: string){
+
+    let apiClient = await ServiceLocator.get<SERVICE_API_CLIENT>(SERVICE_API_CLIENT);
+
+    await apiClient.deleteProject(id);
+    
+    await this.loadProjects();
   }
 }

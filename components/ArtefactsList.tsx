@@ -1,6 +1,7 @@
 import { IArtefact } from "../src/state/stores/ProjectStore";
 import { useStore } from "../src/state/stores/RootStore";
 import styled from 'styled-components';
+import { getArtefactColor } from "../theme/artefact.colors";
 
 const ArtefactButton = styled.div<{bgColor: string}>`
   background-color:${props => props.bgColor || "white"};;
@@ -13,9 +14,6 @@ const ArtefactButton = styled.div<{bgColor: string}>`
 const ArtefactWrapper = styled.div`
   display: flex;
 `
-const colorMap: any = {
-  'functionality': '#33ab3d'
-}
 
 interface IProps {
 
@@ -28,7 +26,7 @@ const ArtefactList: React.FC<IProps> = ({}) => {
   const renderArtefactBtn = ( groupName: string, count: number ) => {
 
     return (
-      <ArtefactButton bgColor={colorMap[groupName]}>
+      <ArtefactButton bgColor={getArtefactColor(groupName)}>
         {groupName}
         {` [${count}]`}
       </ArtefactButton>

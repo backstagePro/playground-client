@@ -18,6 +18,29 @@ export default class ApiService {
     return res.data.allProjects;
   }
 
+  async deleteProject(id: string){
+    let res = await this.client
+            .getClient()
+            .delete(`project/delete/${id}`);
+
+    return {
+      success: res.data.success
+    }
+  }
+
+  async importProject(path: string){
+    let res = await this.client
+            .getClient()
+            .post(`project/import`, {
+              projectPath: path
+            });
+
+    return {
+      project: res.data.project,
+      artefacts: res.data.artefacts
+    }
+  }
+
   async fetchProject(id: string){
 
     let res = await this.client

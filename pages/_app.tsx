@@ -7,6 +7,7 @@ import { Layout, Menu, Breadcrumb } from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
 import ClientSideRenderer from '../components/ClientSideRender';
 import { store, StoreContext } from '../src/state/stores/RootStore';
+import { api, ApiClientContext  } from '../src/hooks/useApiClient';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -17,6 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ClientSideRenderer>
       <StoreContext.Provider value={store}>
+      <ApiClientContext.Provider value={api}>
       <Layout>
         {/* <Header className="header">
           <div className="logo" />
@@ -59,6 +61,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           </Layout>
         </Layout>
       </Layout>
+
+      </ApiClientContext.Provider>
       </StoreContext.Provider>
     </ClientSideRenderer>
   );

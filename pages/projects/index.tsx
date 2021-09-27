@@ -1,33 +1,14 @@
-import { Space, Button, Table } from "antd";
+import { Space, Button, Table, message } from "antd";
 import Link from 'next/link';
 import { useStore } from "../../src/state/stores/RootStore";
 import { observer } from 'mobx-react-lite';
 import { useEffect } from "react";
 import { Card } from 'antd'
+import { useApiClient } from "../../src/hooks/useApiClient";
 
 interface IProps {
 
 }
-
-const columns = [
-  {
-    title: 'Project path',
-    dataIndex: 'path',
-    key: 'path',
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (text: any, record: any) => (
-      <Space size="middle">
-        <Link href={`/projects/${record._id}`}>
-          <a>Open</a>
-        </Link>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
 
 const Index: React.FC<IProps> = observer(({}) => {
 
@@ -42,6 +23,13 @@ const Index: React.FC<IProps> = observer(({}) => {
     }
   }, []);
 
+  const deleteProject = async (id: string) => {
+
+    await projectStore.deleteProject(id);
+  
+    message.success("Project was deleted");
+  }
+
   const renderProjectTable = () => {
 
     return (
@@ -50,6 +38,27 @@ const Index: React.FC<IProps> = observer(({}) => {
       </div>
     )
   }
+
+
+  const columns = [
+    {
+      title: 'Project path',
+      dataIndex: 'path',
+      key: 'path',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text: any, record: any) => (
+        <Space size="middle">
+          <Link href={`/projects/${record._id}`}>
+            <a>Open</a>
+          </Link>
+          <a onClick={deleteProject.bind(this, record._id)}>Delete</a>
+        </Space>
+      ),
+    },
+  ];
 
   return (
     <div>
