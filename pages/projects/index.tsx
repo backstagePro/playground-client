@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useStore } from "../../src/state/stores/RootStore";
 import { observer } from 'mobx-react-lite';
 import { useEffect } from "react";
+import { Card } from 'antd'
 
 interface IProps {
 
@@ -52,10 +53,14 @@ const Index: React.FC<IProps> = observer(({}) => {
 
   return (
     <div>
-      <Link href="/projects/import">
-        <Button type="primary">Import project</Button>
-      </Link>
-      {renderProjectTable()}
+      <Card>
+        <Link href="/projects/import">
+          <Button type="primary">Import project</Button>
+        </Link>
+      </Card>
+      <Card title="Projects">
+        {renderProjectTable()}
+      </Card>
     </div>
   )
 });

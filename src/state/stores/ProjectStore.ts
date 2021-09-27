@@ -1,8 +1,20 @@
-import { observable, makeObservable, action } from 'mobx'
+import { observable, makeObservable, action, computed } from 'mobx'
 import ServiceLocator from '../../ServiceLocator';
 import { SERVICE_API_CLIENT, SERVICE_HTTP_CLIENT } from '../../services';
 
-interface IProject {
+export interface IArtefact {
+   /**
+    * Name of the group
+    */
+    group: string,
+
+    /**
+     * Custom name to be shown
+     */
+    name: string;
+}
+
+export interface IProject {
   /**
      * Absolute path to project
      */ 
@@ -16,21 +28,39 @@ interface IProject {
    /**
     * ProjectArtefacts
     */
-   artefacts: any[]
+   artefacts: {[groupName: string]: IArtefact[]}
 }
 
 export default class ProjectStore {
 
+  /**
+   * List of all imported projects
+   */
   public projectList: IProject[] = [];
 
+  /**
+   * Used to store the data for the project that has been opened currently in the 
+   * project
+   */
   public currentOpenProject?: IProject;
 
   constructor(){
     makeObservable(this, {
       projectList: observable,
       currentOpenProject: observable,
-      loadProjects: action
+      loadProjects: action,
+      getProjectNameFromPath: computed
     })
+  }
+
+  get getProjectNameFromPath() : string {
+
+    if(this.currentOpenProject){
+      let split = this.currentOpenProject.path.split('/')
+      return split[split?.length - 1];
+    }
+
+    return '';
   }
 
   /**

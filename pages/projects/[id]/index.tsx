@@ -1,8 +1,11 @@
 import { useRouter } from 'next/router'
-import { Card } from 'antd';
+import { Card, Divider, Typography } from 'antd';
 import { useEffect } from 'react';
 import { useStore } from '../../../src/state/stores/RootStore';
 import { observer } from 'mobx-react-lite'
+import ArtefactList from '../../../components/ArtefactsList';
+
+const { Title } = Typography;
 
 interface IProps {
 
@@ -11,8 +14,9 @@ interface IProps {
 const ProjectPage: React.FC<IProps> = observer(({}) => {
 
   const router = useRouter();
-  const { projectStore } = useStore()
   let projectId = router.query.id as string;
+
+  const { projectStore } = useStore()
 
   useEffect(() => {
 
@@ -27,9 +31,14 @@ const ProjectPage: React.FC<IProps> = observer(({}) => {
   }
 
   return (
-    <Card>
-      {JSON.stringify(projectStore.currentOpenProject)}
-    </Card>  
+    <>
+      <Card>
+        <Title level={3}>{projectStore.getProjectNameFromPath}</Title>
+      </Card>
+      <Card>
+        <ArtefactList></ArtefactList>
+      </Card>
+    </>
   )
 });
 

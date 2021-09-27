@@ -1,4 +1,4 @@
-import { Card, Input, Form } from 'antd';
+import { Card, Button, Input, Form } from 'antd';
 
 interface IProps {
 
@@ -28,6 +28,12 @@ const Import: React.FC<IProps> = ({}) => {
 
           />
         </Form.Item>
+
+        <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
+          <Button type="primary" htmlType="submit">
+              Import
+          </Button>
+        </Form.Item>  
       </Form>
     </Card>   
   )
