@@ -10,7 +10,7 @@ const ButtonWp = styled.div`
     cursor: pointer;
     padding: 10px;
     &:hover {
-        background-color: #f5f5f5;
+        background-color: #e6fcdc;
     }
 `
 

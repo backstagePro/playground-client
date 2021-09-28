@@ -3,7 +3,8 @@ import { useRouter } from "next/router";
 import MonacoEditor from "../../../components/MonacoEditor";
 import useLoadProject from "../../../src/hooks/useLoadProject";
 import { IServiceArtefact } from "../../../src/state/artefacts/IServiceArtefact";
-import { Typography, Card } from 'antd';
+import { Typography, Card, Button } from 'antd';
+import Link from 'next/link';
 
 const { Title } = Typography;
 
@@ -22,10 +23,25 @@ const ArtefactFunctionality: React.FC<IProps> = observer(({}) => {
 
   let artefact = projectStore.getArtefact<IServiceArtefact>(router.query.artefactid as string);
 
+  /**
+   * Render runs
+   */
+  let runs: any = [];
+  artefact?.runs.forEach((run) => {
+    runs.push(
+        <div>
+            Run: {run.name} 
+            <Link href={`/run/${router.query.projectid}/${router.query.artefactid}/${run.id}`}>
+                <Button>START</Button>
+            </Link>
+        </div>
+    )
+  })
+
   return (
     <Card>
       <Title level={5}>{artefact?.name}</Title>
-      <MonacoEditor />
+      {runs}
     </Card>  
   )
 })
