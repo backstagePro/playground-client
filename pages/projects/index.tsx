@@ -3,8 +3,7 @@ import Link from 'next/link';
 import { useStore } from "../../src/state/stores/RootStore";
 import { observer } from 'mobx-react-lite';
 import { useEffect } from "react";
-import { Card } from 'antd'
-import { useApiClient } from "../../src/hooks/useApiClient";
+import { Card } from 'antd';
 
 interface IProps {
 
@@ -54,7 +53,12 @@ const Index: React.FC<IProps> = observer(({}) => {
           <Link href={`/projects/${record._id}`}>
             <a>Open</a>
           </Link>
-          <a onClick={deleteProject.bind(this, record._id)}>Delete</a>
+          <Button 
+            type="dashed"
+            danger={true}
+            onClick={deleteProject.bind(this, record._id)}>
+              Delete
+          </Button>
         </Space>
       ),
     },

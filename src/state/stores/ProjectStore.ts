@@ -78,6 +78,13 @@ export default class ProjectStore {
 
   public async fetchProject(id: string){
 
+    // if(this.currentOpenProject?._id === id){
+    //   // the project is already cached
+    //   return;
+    // }
+
+    debugger;
+
     let apiClient = await ServiceLocator.get<SERVICE_API_CLIENT>(SERVICE_API_CLIENT);
 
     this.currentOpenProject = await apiClient.fetchProject(id); 
