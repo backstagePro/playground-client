@@ -66,13 +66,13 @@ const Index: React.FC<IProps> = observer(({}) => {
 
   return (
     <div>
+      <Card title="Projects">
+        {renderProjectTable()}
+      </Card>
       <Card>
         <Link href="/projects/import">
           <Button type="primary">Import project</Button>
         </Link>
-      </Card>
-      <Card title="Projects">
-        {renderProjectTable()}
       </Card>
     </div>
   )

@@ -3,15 +3,20 @@ import ServiceLocator from '../../ServiceLocator';
 import { SERVICE_API_CLIENT, SERVICE_HTTP_CLIENT } from '../../services';
 
 export interface IArtefact {
-   /**
-    * Name of the group
-    */
-    group: string,
+  /**
+   * The id of the artefact
+   */
+  id: string;
 
-    /**
-     * Custom name to be shown
-     */
-    name: string;
+  /**
+  * Name of the group
+  */
+  group: string,
+
+  /**
+   * Custom name to be shown
+   */
+  name: string;
 }
 
 export interface IProject {
@@ -78,13 +83,6 @@ export default class ProjectStore {
 
   public async fetchProject(id: string){
 
-    // if(this.currentOpenProject?._id === id){
-    //   // the project is already cached
-    //   return;
-    // }
-
-    debugger;
-
     let apiClient = await ServiceLocator.get<SERVICE_API_CLIENT>(SERVICE_API_CLIENT);
 
     this.currentOpenProject = await apiClient.fetchProject(id); 
@@ -97,5 +95,34 @@ export default class ProjectStore {
     await apiClient.deleteProject(id);
     
     await this.loadProjects();
+  }
+
+  /**
+   * Get artefact from current loaded project
+   * 
+   * @param id 
+   */
+  public getArtefact<T>(id: string): T | null { 
+
+    if(!this.currentOpenProject){
+      return null;
+    }
+
+    let found: any = [];
+
+    Object.keys(this.currentOpenProject.artefacts).forEach(( group ) => {
+      let artefacts = this.currentOpenProject?.artefacts[group];
+
+      found = found.concat(artefacts?.filter((artefact) => {
+        if(artefact.id === id){
+          return true;
+        }
+
+        return false;
+      }))
+    });
+
+    return found[0];
+
   }
 }

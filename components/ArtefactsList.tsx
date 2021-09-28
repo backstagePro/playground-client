@@ -2,6 +2,7 @@ import { IArtefact } from "../src/state/stores/ProjectStore";
 import { useStore } from "../src/state/stores/RootStore";
 import styled from 'styled-components';
 import { getArtefactColor } from "../theme/artefact.colors";
+import Link from 'next/link';
 
 const ArtefactButton = styled.div<{bgColor: string}>`
   background-color:${props => props.bgColor || "white"};;
@@ -17,19 +18,22 @@ const ArtefactWrapper = styled.div`
 
 interface IProps {
 
+  projectId: string;
 }
 
-const ArtefactList: React.FC<IProps> = ({}) => {
+const ArtefactList: React.FC<IProps> = ({ projectId }) => {
 
   const { projectStore } = useStore();
 
   const renderArtefactBtn = ( groupName: string, count: number ) => {
 
     return (
-      <ArtefactButton bgColor={getArtefactColor(groupName)}>
-        {groupName}
-        {` [${count}]`}
-      </ArtefactButton>
+      <Link href={`/artefacts/${groupName}/${projectId}`}>
+        <ArtefactButton bgColor={getArtefactColor(groupName)}>
+          {groupName}
+          {` [${count}]`}
+        </ArtefactButton>
+      </Link>
     )
   }
 

@@ -1,4 +1,5 @@
 import { Card, Button, Input, Form, message } from 'antd';
+import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useApiClient } from '../../../src/hooks/useApiClient';
@@ -7,7 +8,7 @@ interface IProps {
 
 }
 
-const Import: React.FC<IProps> = ({}) => {
+const Import: React.FC<IProps> = observer( ({}) => {
 
   const { getClient } = useApiClient();
   const router = useRouter();
@@ -59,6 +60,6 @@ const Import: React.FC<IProps> = ({}) => {
       </Form>
     </Card>   
   )
-}
+})
 
 export default Import;

@@ -26,7 +26,9 @@ const MonacoEditor: React.FC<IProps> = ({}) => {
 
     return () => {
       editor.dispose();
-      editorRef.current.innerHTML = ''
+      if(editorRef.current){
+        editorRef.current.innerHTML = '';
+      }
     }
   }, []);
 
