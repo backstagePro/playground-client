@@ -4,6 +4,7 @@ import { Typography, Row, Button, Col, Card } from 'antd';
 import Link from 'next/link';
 import useLoadProject from "../../../src/hooks/useLoadProject";
 import { IServiceArtefact } from "../../../src/state/artefacts/IServiceArtefact";
+import ArtefactButton from "../../../components/ArtefactButton";
 
 
 const { Title } = Typography;
@@ -28,19 +29,9 @@ const FunctionalityArtefacts: React.FC<IProps> = observer(({}) => {
   if(projectStore.currentOpenProject){
     (projectStore.currentOpenProject.artefacts['functionality'] as IServiceArtefact[]).forEach(( artefact ) => {
       artefactsJsx.push(
-        <Row style={{borderBottom: '1px dashed silver', padding: '10px 0'}} justify="space-around" align="middle">
-          <Col span="20">
-            <div>
-              <Title level={5}>{artefact.name}</Title>
-            </div>
-            <div>
-              {artefact.servicePath}
-            </div>
-          </Col>
-          <Col span="4">
-            <Link href={`/functionality/${projectId}/${artefact.id}`}><Button type="primary">Open</Button></Link>
-          </Col>
-        </Row>
+        <ArtefactButton artefact={artefact} onClick={() => {router.push(`/functionality/${projectId}/${artefact.id}`)}}>
+            {artefact.servicePath}
+        </ArtefactButton>
       )
     });
   }
