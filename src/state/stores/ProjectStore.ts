@@ -1,23 +1,9 @@
 import { observable, makeObservable, action, computed } from 'mobx'
 import ServiceLocator from '../../ServiceLocator';
-import { SERVICE_API_CLIENT, SERVICE_HTTP_CLIENT } from '../../services';
+import {  SERVICE_API_CLIENT  } from '../../services';
+import { IArtefact } from '../artefacts/IArteract';
+import ArtefactStore from './ArtefactStore';
 
-export interface IArtefact {
-  /**
-   * The id of the artefact
-   */
-  id: string;
-
-  /**
-  * Name of the group
-  */
-  group: string,
-
-  /**
-   * Custom name to be shown
-   */
-  name: string;
-}
 
 export interface IProject {
   /**
@@ -33,7 +19,7 @@ export interface IProject {
    /**
     * ProjectArtefacts
     */
-   artefacts: {[groupName: string]: IArtefact[]}
+   artefacts: {[id: string]: IArtefact}
 }
 
 export default class ProjectStore {
@@ -49,14 +35,19 @@ export default class ProjectStore {
    */
   public currentOpenProject?: IProject;
 
-  constructor(){
+  private artefactStore: ArtefactStore;
+
+
+  constructor( artefactStore: ArtefactStore ){
     makeObservable(this, {
       projectList: observable,
       currentOpenProject: observable,
       getProjectNameFromPath: computed,
       loadProjects: action,
       deleteProject: action,
-    })
+    });
+
+    this.artefactStore = artefactStore;
   }
 
   get getProjectNameFromPath() : string {
@@ -78,14 +69,36 @@ export default class ProjectStore {
 
     let apiClient = await ServiceLocator.get<SERVICE_API_CLIENT>(SERVICE_API_CLIENT);
 
-    this.projectList = await apiClient.loadAllProjects(); 
+    this.projectList = await apiClient.loadAllProjects();
   }
 
+  /**
+   * 
+   * Fetch project by id, this will be the current opened project for the system.
+   * 
+   * @param id 
+   */
   public async fetchProject(id: string){
 
     let apiClient = await ServiceLocator.get<SERVICE_API_CLIENT>(SERVICE_API_CLIENT);
 
     this.currentOpenProject = await apiClient.fetchProject(id); 
+
+    // load artefacts
+    this.artefactStore.setArtefacts(this.currentOpenProject?.artefacts);
+  }
+
+  /**
+   * Iterate trough artefact list of current opened project
+   */
+  public forEachArtefact( cb: (artefact: IArtefact) => void ){
+    if(this.currentOpenProject){
+        Object.keys(this.currentOpenProject?.artefacts).forEach((id) => {
+            let ar = this.currentOpenProject?.artefacts[id];
+         
+            cb(ar as IArtefact);
+      });
+    }
   }
 
   public async deleteProject(id: string){
@@ -97,32 +110,23 @@ export default class ProjectStore {
     await this.loadProjects();
   }
 
-  /**
-   * Get artefact from current loaded project
-   * 
-   * @param id 
-   */
-  public getArtefact<T>(id: string): T | null { 
+  public getArtefactGroups(): {[groupName: string]: {count: number, artefacts: IArtefact[]}}{
+    let groups: {[groupName: string]: {count: number,  artefacts: IArtefact[]}} = {};
 
-    if(!this.currentOpenProject){
-      return null;
+    if(this.currentOpenProject !== void(0)){
+
+        this.forEachArtefact((artefact) => {
+            let group: any = artefact.group;
+
+            if(groups[group] === void(0)){
+                groups[group] = {count: 1, artefacts: [artefact]};
+            } else {
+                groups[group].count = groups[group].count + 1;
+                groups[group].artefacts.push(artefact)
+            }
+        })
     }
 
-    let found: any = [];
-
-    Object.keys(this.currentOpenProject.artefacts).forEach(( group ) => {
-      let artefacts = this.currentOpenProject?.artefacts[group];
-
-      found = found.concat(artefacts?.filter((artefact) => {
-        if(artefact.id === id){
-          return true;
-        }
-
-        return false;
-      }))
-    });
-
-    return found[0];
-
+    return groups;
   }
 }

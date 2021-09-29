@@ -1,4 +1,4 @@
-import { IArtefact } from "../src/state/stores/ProjectStore";
+
 import { useStore } from "../src/state/stores/RootStore";
 import styled from 'styled-components';
 import { getArtefactColor } from "../theme/artefact.colors";
@@ -42,11 +42,11 @@ const ArtefactList: React.FC<IProps> = ({ projectId }) => {
 
     if(projectStore.currentOpenProject){
 
-      let artefacts = projectStore.currentOpenProject.artefacts;
+        let groups = projectStore.getArtefactGroups();
 
-      Object.keys( artefacts ).forEach((groupName) => {
-        jsx.push( renderArtefactBtn(groupName, artefacts[groupName].length) )
-      })
+        Object.keys( groups ).forEach((groupName) => {
+            jsx.push( renderArtefactBtn(groupName, groups[groupName].count) )
+        })
     }
 
 

@@ -27,7 +27,10 @@ const FunctionalityArtefacts: React.FC<IProps> = observer(({}) => {
   let artefactsJsx: any[] = [];
 
   if(projectStore.currentOpenProject){
-    (projectStore.currentOpenProject.artefacts['functionality'] as IServiceArtefact[]).forEach(( artefact ) => {
+
+    let groups = projectStore.getArtefactGroups()['functionality'];
+
+    (groups.artefacts as IServiceArtefact[]).forEach(( artefact ) => {
       artefactsJsx.push(
         <ArtefactButton artefact={artefact} onClick={() => {router.push(`/functionality/${projectId}/${artefact.id}`)}}>
             {artefact.servicePath}

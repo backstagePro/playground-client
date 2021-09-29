@@ -1,10 +1,10 @@
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/router";
-import MonacoEditor from "../../../components/MonacoEditor";
 import useLoadProject from "../../../src/hooks/useLoadProject";
-import { IServiceArtefact } from "../../../src/state/artefacts/IServiceArtefact";
 import { Typography, Card, Button } from 'antd';
 import Link from 'next/link';
+import { useStore } from "../../../src/state/stores/RootStore";
+import FunctionalityArtefact from "../../../src/state/artefacts/FunctionalityArtefact";
 
 const { Title } = Typography;
 
@@ -15,19 +15,17 @@ interface IProps {
 const ArtefactFunctionality: React.FC<IProps> = observer(({}) => {
 
   const router = useRouter();
-  const { projectStore, loading } = useLoadProject(router.query.projectid as string);
+  const { loading } = useLoadProject(router.query.projectid as string);
+  const { artefactStore } = useStore();
 
   if(loading === true){
     return null;
   }
 
-  let artefact = projectStore.getArtefact<IServiceArtefact>(router.query.artefactid as string);
+  let artefact = artefactStore.getArtefact(router.query.artefactid as string) as FunctionalityArtefact;
 
-  /**
-   * Render runs
-   */
   let runs: any = [];
-  artefact?.runs.forEach((run) => {
+  artefact.forEachRun((run) => {
     runs.push(
         <div>
             Run: {run.name} 
@@ -36,11 +34,11 @@ const ArtefactFunctionality: React.FC<IProps> = observer(({}) => {
             </Link>
         </div>
     )
-  })
+  });
 
   return (
     <Card>
-      <Title level={5}>{artefact?.name}</Title>
+      <Title level={5}>{artefact.getName()}</Title>
       {runs}
     </Card>  
   )

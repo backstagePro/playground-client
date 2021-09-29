@@ -49,4 +49,14 @@ export default class ApiService {
 
     return res.data.projectData;
   }
+
+  async startRun(id: string){
+    let res = await this.client
+        .getClient()
+        .post(`/run/start`, {
+            runId: id
+        });
+
+    return res.data;
+  }
 }
