@@ -41,7 +41,7 @@ export default class ApiService {
     }
   }
 
-  async fetchProject(id: string){
+  async fetchProject(id: string): Promise<{project: any, runs: any, artefacts: any}>{
 
     let res = await this.client
             .getClient()

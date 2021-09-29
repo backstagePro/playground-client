@@ -3,6 +3,7 @@ import ServiceLocator from '../../ServiceLocator';
 import {  SERVICE_API_CLIENT  } from '../../services';
 import { IArtefact } from '../artefacts/IArteract';
 import ArtefactStore from './ArtefactStore';
+import RunStore from './RunStore';
 
 
 export interface IProject {
@@ -37,8 +38,9 @@ export default class ProjectStore {
 
   private artefactStore: ArtefactStore;
 
+  private runStore: RunStore;
 
-  constructor( artefactStore: ArtefactStore ){
+  constructor( artefactStore: ArtefactStore, runStore: RunStore ){
     makeObservable(this, {
       projectList: observable,
       currentOpenProject: observable,
@@ -48,6 +50,8 @@ export default class ProjectStore {
     });
 
     this.artefactStore = artefactStore;
+
+    this.runStore = runStore;
   }
 
   get getProjectNameFromPath() : string {
@@ -82,24 +86,29 @@ export default class ProjectStore {
 
     let apiClient = await ServiceLocator.get<SERVICE_API_CLIENT>(SERVICE_API_CLIENT);
 
-    this.currentOpenProject = await apiClient.fetchProject(id); 
+    let {project , runs, artefacts } = await apiClient.fetchProject(id);
+
+    this.currentOpenProject = project;
 
     // load artefacts
-    this.artefactStore.setArtefacts(this.currentOpenProject?.artefacts);
+    this.artefactStore.setArtefacts(artefacts);
+    this.runStore.setRuns(runs);
+
+    this.runStore.setRuns(runs);
   }
 
   /**
    * Iterate trough artefact list of current opened project
    */
-  public forEachArtefact( cb: (artefact: IArtefact) => void ){
-    if(this.currentOpenProject){
-        Object.keys(this.currentOpenProject?.artefacts).forEach((id) => {
-            let ar = this.currentOpenProject?.artefacts[id];
+//   public forEachArtefact( cb: (artefact: IArtefact) => void ){
+//     if(this.currentOpenProject){
+//         Object.keys(this.currentOpenProject?.artefacts).forEach((id) => {
+//             let ar = this.currentOpenProject?.artefacts[id];
          
-            cb(ar as IArtefact);
-      });
-    }
-  }
+//             cb(ar as IArtefact);
+//       });
+//     }
+//   }
 
   public async deleteProject(id: string){
 
@@ -110,23 +119,23 @@ export default class ProjectStore {
     await this.loadProjects();
   }
 
-  public getArtefactGroups(): {[groupName: string]: {count: number, artefacts: IArtefact[]}}{
-    let groups: {[groupName: string]: {count: number,  artefacts: IArtefact[]}} = {};
+//   public getArtefactGroups(): {[groupName: string]: {count: number, artefacts: IArtefact[]}}{
+//     let groups: {[groupName: string]: {count: number,  artefacts: IArtefact[]}} = {};
 
-    if(this.currentOpenProject !== void(0)){
+//     if(this.currentOpenProject !== void(0)){
 
-        this.forEachArtefact((artefact) => {
-            let group: any = artefact.group;
+//         this.forEachArtefact((artefact) => {
+//             let group: any = artefact.group;
 
-            if(groups[group] === void(0)){
-                groups[group] = {count: 1, artefacts: [artefact]};
-            } else {
-                groups[group].count = groups[group].count + 1;
-                groups[group].artefacts.push(artefact)
-            }
-        })
-    }
+//             if(groups[group] === void(0)){
+//                 groups[group] = {count: 1, artefacts: [artefact]};
+//             } else {
+//                 groups[group].count = groups[group].count + 1;
+//                 groups[group].artefacts.push(artefact)
+//             }
+//         })
+//     }
 
-    return groups;
-  }
+//     return groups;
+//   }
 }

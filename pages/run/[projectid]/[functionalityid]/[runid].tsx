@@ -13,7 +13,7 @@ interface IProps {
 const Run: FC<IProps> = ({  }) => {
 
     const router = useRouter();
-    const { artefactStore } = useStore();
+    const { artefactStore, runStore } = useStore();
     const { loading } = useLoadProject(router.query.projectid as string);
     const { getClient } = useApiClient();
   
@@ -33,8 +33,8 @@ const Run: FC<IProps> = ({  }) => {
         await client.startRun(router.query.runid as string);
     }
 
-    let artefact = artefactStore.getArtefact(router.query.functionalityid as string) as FunctionalityArtefact;
-    let run = artefact.getRun( router.query.runid as string);
+    // let artefact = artefactStore.getArtefact(router.query.functionalityid as string);
+    let run = runStore.findRun( router.query.runid as string);
 
     return (
         <div>

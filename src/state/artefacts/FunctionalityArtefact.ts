@@ -1,3 +1,4 @@
+import AbstractArtefact from "./AbstractArtefact";
 import { IServiceArtefact } from "./IServiceArtefact";
 
 interface IRun {
@@ -5,12 +6,12 @@ interface IRun {
     id: string;
 }
 
-export default class FunctionalityArtefact {
+export default class FunctionalityArtefact extends AbstractArtefact {
 
     private artefact: IServiceArtefact;
 
     constructor( artefact: IServiceArtefact){
-
+        super();
         this.artefact = artefact;
     }
 
@@ -27,6 +28,8 @@ export default class FunctionalityArtefact {
     }
 
     public getRun( runId: string ){
+
+        let runStore = this.getRunStore()
 
         if(this.artefact.runs[runId]){
             return this.artefact.runs[runId];

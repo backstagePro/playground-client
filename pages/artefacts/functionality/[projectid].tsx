@@ -5,6 +5,7 @@ import Link from 'next/link';
 import useLoadProject from "../../../src/hooks/useLoadProject";
 import { IServiceArtefact } from "../../../src/state/artefacts/IServiceArtefact";
 import ArtefactButton from "../../../components/ArtefactButton";
+import { useStore } from "../../../src/state/stores/RootStore";
 
 
 const { Title } = Typography;
@@ -18,6 +19,7 @@ const FunctionalityArtefacts: React.FC<IProps> = observer(({}) => {
   const router = useRouter();
   const projectId = router.query.projectid as string;
 
+  const { artefactStore } = useStore();
   const { projectStore, loading } = useLoadProject(projectId);
 
   if(loading === true){
@@ -28,12 +30,12 @@ const FunctionalityArtefacts: React.FC<IProps> = observer(({}) => {
 
   if(projectStore.currentOpenProject){
 
-    let groups = projectStore.getArtefactGroups()['functionality'];
+    let groups = artefactStore.getGroups()['functionality'];
 
     (groups.artefacts as IServiceArtefact[]).forEach(( artefact ) => {
       artefactsJsx.push(
-        <ArtefactButton artefact={artefact} onClick={() => {router.push(`/functionality/${projectId}/${artefact.id}`)}}>
-            {artefact.servicePath}
+        <ArtefactButton artefact={artefact} onClick={() => {router.push(`/functionality/${projectId}/${artefact._id}`)}}>
+            file path: {artefact.servicePath}
         </ArtefactButton>
       )
     });

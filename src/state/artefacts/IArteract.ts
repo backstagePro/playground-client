@@ -1,16 +1,5 @@
 export interface IArtefact {
-    /**
-     * The id of the artefact
-     */
-    id: string;
-  
-    /**
-    * Name of the group
-    */
-    group: string,
-  
-    /**
-     * Custom name to be shown
-     */
-    name: string;
+    group: string
+    projectId: string
+    _id: string
 }

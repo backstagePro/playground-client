@@ -9,7 +9,7 @@ export default class ArtefactStore {
     /**
      * Contains artefcts for current fetched project
      */
-    public artefacts: { [artefactId: string]: IArtefact} = {};
+    public artefacts: IArtefact[] = [];
 
     constructor(){
 
@@ -29,6 +29,28 @@ export default class ArtefactStore {
         this.artefacts = artefacts;
     }
 
+    public getGroups(): {[groupName: string]: { count: number, artefacts: IArtefact[]}} {
+
+        let groups: {[groupName: string]: { count: number, artefacts: IArtefact[]}} = {};
+
+        this.artefacts.forEach((art) => {
+
+            if(groups[art.group] === void(0)){
+                groups[art.group] = {
+                    count: 1,
+                    artefacts: [art]
+                }
+            } else {
+                groups[art.group].count += 1;
+                groups[art.group].artefacts.push(art);
+            }
+
+        });
+
+        return groups;
+
+    }
+
     /**
      * Find artefact by id
      * 
@@ -37,16 +59,14 @@ export default class ArtefactStore {
      */
     public getArtefact(id: string){
 
-        if(this.artefacts[id]){
-
-            let ar = this.artefacts[id];
-            if(ar.group === 'functionality'){
-                return new FunctionalityArtefact(ar as any);
+        let found = this.artefacts.filter((art) => {
+            if(art._id === id){
+                return true;
             }
 
-            return this.artefacts[id];
-        }
+            return false;
+        })
 
-        return null;
+        return found.length ? found[0] : null;
     }
 }

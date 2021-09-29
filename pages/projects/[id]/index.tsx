@@ -1,7 +1,5 @@
 import { useRouter } from 'next/router'
 import { Card, Divider, Typography } from 'antd';
-import { useEffect } from 'react';
-import { useStore } from '../../../src/state/stores/RootStore';
 import { observer } from 'mobx-react-lite'
 import ArtefactList from '../../../components/ArtefactsList';
 import useLoadProject from '../../../src/hooks/useLoadProject';

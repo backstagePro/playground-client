@@ -16,20 +16,21 @@ const ArtefactFunctionality: React.FC<IProps> = observer(({}) => {
 
   const router = useRouter();
   const { loading } = useLoadProject(router.query.projectid as string);
-  const { artefactStore } = useStore();
+  const { artefactStore, runStore} = useStore();
 
   if(loading === true){
     return null;
   }
 
-  let artefact = artefactStore.getArtefact(router.query.artefactid as string) as FunctionalityArtefact;
+  let _artefact = artefactStore.getArtefact(router.query.artefactid as string);
+  let _runs = runStore.getRunsForArtefacts(router.query.artefactid as string);
 
   let runs: any = [];
-  artefact.forEachRun((run) => {
+  _runs.forEach((run) => {
     runs.push(
         <div>
             Run: {run.name} 
-            <Link href={`/run/${router.query.projectid}/${router.query.artefactid}/${run.id}`}>
+            <Link href={`/run/${router.query.projectid}/${router.query.artefactid}/${run._id}`}>
                 <Button>START</Button>
             </Link>
         </div>
@@ -38,7 +39,7 @@ const ArtefactFunctionality: React.FC<IProps> = observer(({}) => {
 
   return (
     <Card>
-      <Title level={5}>{artefact.getName()}</Title>
+      <Title level={5}>{(_artefact as any).name}</Title>
       {runs}
     </Card>  
   )

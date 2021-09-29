@@ -23,7 +23,7 @@ interface IProps {
 
 const ArtefactList: React.FC<IProps> = ({ projectId }) => {
 
-  const { projectStore } = useStore();
+  const { projectStore, artefactStore } = useStore();
 
   const renderArtefactBtn = ( groupName: string, count: number ) => {
 
@@ -42,7 +42,7 @@ const ArtefactList: React.FC<IProps> = ({ projectId }) => {
 
     if(projectStore.currentOpenProject){
 
-        let groups = projectStore.getArtefactGroups();
+        let groups = artefactStore.getGroups();
 
         Object.keys( groups ).forEach((groupName) => {
             jsx.push( renderArtefactBtn(groupName, groups[groupName].count) )
