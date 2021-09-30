@@ -19,6 +19,11 @@ export default class HttpClient {
       baseURL: 'http://localhost:3001/'
     });
 
+    this.client.interceptors.response.use((response) => response, (error) => {
+      // whatever you want to do with the error
+      alert(error);
+    });
+
     return this.client;
   }
 }
