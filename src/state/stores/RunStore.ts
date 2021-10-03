@@ -1,4 +1,6 @@
 import {  observable, makeObservable, action, computed } from 'mobx';
+import ServiceLocator from '../../ServiceLocator';
+import { SERVICE_API_CLIENT, SERVICE_WEBSOCKET_CLIENT } from '../../services';
 
 interface IRun {
     artefactId: string
@@ -7,6 +9,9 @@ interface IRun {
 }
 
 export default class RunStore {
+
+
+    public currentRunFileData = null;
 
     /**
      * Contains artefcts for current fetched project
@@ -17,6 +22,7 @@ export default class RunStore {
 
       makeObservable(this, {
           runs: observable,
+          currentRunFileData: observable,
           setRuns: action 
       });
     }
@@ -56,5 +62,23 @@ export default class RunStore {
         })
 
         return found.length ? found: [];
+    }
+
+    public async startRunSesstion( runid: string ){
+
+        let apiClient = await ServiceLocator.get<SERVICE_API_CLIENT>(SERVICE_API_CLIENT);
+
+        let sessionData = await apiClient.startRun(runid);
+
+        this.currentRunFileData = sessionData.fileMap;
+
+        // create connection 
+
+        const websocketClient = await ServiceLocator.get<SERVICE_WEBSOCKET_CLIENT>(SERVICE_WEBSOCKET_CLIENT)
+
+        const socket = websocketClient.init('run-data');
+
+        
+
     }
 }
