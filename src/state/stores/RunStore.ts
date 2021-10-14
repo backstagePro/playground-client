@@ -2,6 +2,33 @@ import {  observable, makeObservable, action, computed } from 'mobx';
 import ServiceLocator from '../../ServiceLocator';
 import { SERVICE_API_CLIENT, SERVICE_WEBSOCKET_CLIENT } from '../../services';
 
+export interface IRunFileData {
+    
+    [filePath: string]: {
+        modifiedFile: string;
+        filePreview: string;
+    }
+} 
+
+export interface IRunPointData {
+    variableName: string,
+    id: string,
+    filePath: string,
+    val: any,
+    counter: number
+}
+
+export interface IRunCollectedData {
+    [id: string]: IRunPointData
+}
+
+export interface IRunFileImportTree {
+    root: string,
+    children: {
+      [filePath: string]: string[]
+    }
+}
+
 interface IRun {
     artefactId: string
     name: string
@@ -70,15 +97,15 @@ export default class RunStore {
 
         let sessionData = await apiClient.startRun(runid);
 
-        this.currentRunFileData = sessionData.fileMap;
+        this.currentRunFileData = sessionData.runData;
 
         // create connection 
 
-        const websocketClient = await ServiceLocator.get<SERVICE_WEBSOCKET_CLIENT>(SERVICE_WEBSOCKET_CLIENT)
+        // const websocketClient = await ServiceLocator.get<SERVICE_WEBSOCKET_CLIENT>(SERVICE_WEBSOCKET_CLIENT)
 
-        const socket = websocketClient.init('run-data');
+        // const socket = websocketClient.init('run-data');
 
-        
+
 
     }
 }

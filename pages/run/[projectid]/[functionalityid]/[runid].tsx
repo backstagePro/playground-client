@@ -2,6 +2,9 @@
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import { FC, useEffect } from 'react'
+import FileLogTemplate from '../../../../components/FileLogTemplate';
+import MonacoEditor from '../../../../components/MonacoEditor';
+import SlideFileViewer from '../../../../components/SlideFilesViewer';
 import useLoadProject from '../../../../src/hooks/useLoadProject';
 import { useStore } from '../../../../src/state/stores/RootStore';
 
@@ -18,6 +21,8 @@ const Run: FC<IProps> = observer(({  }) => {
     useEffect(() => {
 
         if(router.query.runid){
+
+            // start run session
             runStore.startRunSesstion(router.query.runid as string).catch((e) => {
                 alert('error' + e);
             });
@@ -33,9 +38,18 @@ const Run: FC<IProps> = observer(({  }) => {
 
     return (
         <div>
-            { runStore.currentRunFileData ?
-             <pre> { JSON.stringify(runStore.currentRunFileData, undefined, 2) }</pre>: 
-             <span> loading </span>}
+            {
+                runStore.currentRunFileData ?
+                <div>
+                    <SlideFileViewer 
+                        fileData={runStore.currentRunFileData.fileData}
+                        collectedData={runStore.currentRunFileData.collectedData}
+                        fileExecList={runStore.currentRunFileData.fileExecList}
+                    />
+                    {/* <pre> { JSON.stringify(runStore.currentRunFileData, undefined, 2) }</pre> */}
+                </div> :
+                <span> loading </span>
+            }
         </div>
     );
 });
